@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>StudyHive — Free Notes & Study Material</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+<style>
+/* ─── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e2a;
+  --surface: #1f2333;
+  --surface2: #252b3b;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8eaf0;
+  --text2: #8b92a8;
+  --text3: #555e78;
+  --accent: #6c63ff;
+  --accent2: #9d79f7;
+  --accent-glow: rgba(108,99,255,0.18);
+  --green: #2fd8a0;
+  --green-bg: rgba(47,216,160,0.1);
+  --amber: #f5c842;
+  --amber-bg: rgba(245,200,66,0.1);
+  --red: #ff5e7d;
+  --red-bg: rgba(255,94,125,0.1);
+  --blue: #4fa3f7;
+  --blue-bg: rgba(79,163,247,0.1);
+  --sidebar-w: 240px;
+  --navbar-h: 64px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --shadow: 0 4px 24px rgba(0,0,0,0.35);
+}
+[data-theme="light"] {
+  --bg: #f4f5fb;
+  --bg2: #eceef6;
+  --bg3: #e4e7f2;
+  --surface: #ffffff;
+  --surface2: #f0f2fb;
+  --border: rgba(0,0,0,0.07);
+  --border2: rgba(0,0,0,0.13);
+  --text: #1a1d2e;
+  --text2: #5a6180;
+  --text3: #9ca3bf;
+  --accent: #5b52e8;
+  --accent2: #7c66d4;
+  --accent-glow: rgba(91,82,232,0.12);
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+/* ─── Reset & Base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+  transition: background var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); border: none; background: none; }
+input, select, textarea { font-family: var(--font-body); }
+img { display: block; max-width: 100%; }
+ul { list-style: none; }
+h1,h2,h3,h4 { font-family: var(--font-head); }
+
+/* ─── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 99px; }
+
+/* ─── Navbar ─────────────────────────────────────────────────── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--navbar-h);
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem;
+  backdrop-filter: blur(12px);
+  transition: background var(--transition);
+}
+.nav-logo {
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  font-weight: 800;
+  display: flex; align-items: center; gap: 0.5rem;
+  color: var(--text);
+}
+.nav-logo span { color: var(--accent); }
+.nav-logo .logo-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.nav-center {
+  flex: 1; max-width: 460px; margin: 0 2rem;
+  position: relative;
+}
+.nav-search {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 99px;
+  padding: 0.5rem 1rem 0.5rem 2.6rem;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.nav-search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.nav-search::placeholder { color: var(--text3); }
+.search-icon {
+  position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
+  color: var(--text3); font-size: 14px; pointer-events: none;
+}
+.nav-actions { display: flex; align-items: center; gap: 0.6rem; }
+.theme-toggle {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: background var(--transition), color var(--transition);
+}
+.theme-toggle:hover { background: var(--surface2); color: var(--text); }
+.btn {
+  padding: 0.5rem 1.1rem;
+  border-radius: 99px;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.btn-ghost {
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  background: var(--surface);
+}
+.btn-ghost:hover { background: var(--surface2); color: var(--text); }
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 12px var(--accent-glow);
+}
+.btn-accent:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 20px var(--accent-glow); }
+.hamburger {
+  display: none;
+  width: 38px; height: 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border2);
+  background: var(--surface);
+  color: var(--text2);
+  align-items: center; justify-content: center;
+  font-size: 18px;
+}
+
+/* ─── Sidebar ─────────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: var(--navbar-h); left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  padding: 1.25rem 0;
+  transition: transform var(--transition), background var(--transition);
+  z-index: 100;
+}
+.sidebar-section-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  font-weight: 600;
+  padding: 0 1.2rem;
+  margin: 1rem 0 0.4rem;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--radius-sm);
+  margin: 1px 0.5rem;
+  font-size: 14px;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+}
+.nav-item:hover { background: var(--surface); color: var(--text); }
+.nav-item.active {
+  background: var(--accent-glow);
+  color: var(--accent);
+  font-weight: 500;
+}
+.nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 99px;
+}
+.sidebar-footer {
+  border-top: 1px solid var(--border);
+  margin: 1rem 0.5rem 0;
+  padding: 1rem 0.7rem 0;
+}
+.user-avatar-mini {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #fff;
+  flex-shrink: 0;
+}
+
+/* ─── Main Layout ─────────────────────────────────────────────── */
+.main-wrap {
+  margin-left: var(--sidebar-w);
+  margin-top: var(--navbar-h);
+  min-height: calc(100vh - var(--navbar-h));
+  padding: 2rem;
+  transition: margin-left var(--transition);
+}
+
+/* ─── Page Sections ───────────────────────────────────────────── */
+.page { display: none; animation: fadeIn 0.3s ease; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── Hero ────────────────────────────────────────────────────── */
+.hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: var(--accent-glow);
+  filter: blur(40px);
+  pointer-events: none;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--green-bg);
+  color: var(--green);
+  font-size: 12px; font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  border: 1px solid rgba(47,216,160,0.2);
+  margin-bottom: 1rem;
+}
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+}
+.hero h1 em { color: var(--accent); font-style: normal; }
+.hero p { color: var(--text2); max-width: 500px; font-size: 15px; margin-bottom: 1.5rem; }
+.hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.hero-stats {
+  display: flex; gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.stat { }
+.stat-num { font-family: var(--font-head); font-size: 1.5rem; font-weight: 800; color: var(--text); }
+.stat-label { font-size: 12px; color: var(--text3); }
+
+/* ─── Section Header ──────────────────────────────────────────── */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.section-title { font-size: 1.15rem; font-weight: 700; }
+.view-all { font-size: 13px; color: var(--accent); cursor: pointer; }
+.view-all:hover { text-decoration: underline; }
+
+/* ─── Category Cards ──────────────────────────────────────────── */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cat-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.cat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--border2); }
+.cat-card:hover::before { opacity: 1; }
+.cat-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+.cat-name { font-weight: 600; font-size: 13.5px; color: var(--text); margin-bottom: 0.2rem; }
+.cat-count { font-size: 12px; color: var(--text3); }
+
+/* ─── Notes Grid ──────────────────────────────────────────────── */
+.filters-row {
+  display: flex; gap: 0.75rem; align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.filter-select {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 0.45rem 0.9rem;
+  font-size: 13.5px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+.filter-select:focus { border-color: var(--accent); }
+.filter-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  background: var(--surface);
+  transition: all var(--transition);
+}
+.filter-btn:hover, .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.note-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all var(--transition);
+  display: flex; flex-direction: column;
+  animation: fadeIn 0.35s ease both;
+}
+.note-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--border2); }
+.note-card-top {
+  padding: 1.1rem 1.1rem 0;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.subject-badge {
+  font-size: 11px; font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+}
+.badge-cs { background: var(--blue-bg); color: var(--blue); }
+.badge-math { background: var(--green-bg); color: var(--green); }
+.badge-phy { background: var(--amber-bg); color: var(--amber); }
+.badge-chem { background: var(--red-bg); color: var(--red); }
+.badge-bio { background: rgba(108,99,255,0.1); color: var(--accent2); }
+.badge-econ { background: rgba(47,216,160,0.1); color: var(--green); }
+.note-menu-btn {
+  width: 28px; height: 28px;
+  border-radius: var(--radius-sm);
+  color: var(--text3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all var(--transition);
+}
+.note-menu-btn:hover { background: var(--surface2); color: var(--text); }
+.note-card-body { padding: 0.75rem 1.1rem; flex: 1; }
+.note-title { font-weight: 700; font-size: 14.5px; margin-bottom: 0.4rem; line-height: 1.35; }
+.note-desc { font-size: 13px; color: var(--text2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.note-card-meta {
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.meta-avatar {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.meta-info { flex: 1; min-width: 0; }
+.meta-name { font-size: 12px; font-weight: 500; color: var(--text2); }
+.meta-date { font-size: 11px; color: var(--text3); }
+.note-actions { display: flex; gap: 0.4rem; margin-left: auto; }
+.like-btn, .dl-btn {
+  display: flex; align-items: center; gap: 0.3rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  background: var(--surface2);
+  transition: all var(--transition);
+}
+.like-btn:hover { border-color: var(--red); color: var(--red); }
+.like-btn.liked { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+.dl-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.file-size { font-size: 11px; color: var(--text3); }
+
+/* ─── Rating Stars ────────────────────────────────────────────── */
+.stars { display: flex; gap: 2px; }
+.star { font-size: 13px; color: var(--text3); cursor: pointer; transition: color 0.15s; }
+.star.filled { color: var(--amber); }
+.star:hover, .star:hover ~ .star { color: var(--text3) !important; }
+.stars:hover .star { color: var(--amber); }
+
+/* ─── Upload Section ──────────────────────────────────────────── */
+.upload-box {
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  text-align: center;
+  background: var(--surface);
+  transition: all var(--transition);
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+}
+.upload-box:hover, .upload-box.dragover { border-color: var(--accent); background: var(--accent-glow); }
+.upload-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.upload-box h3 { font-size: 1rem; margin-bottom: 0.4rem; }
+.upload-box p { font-size: 13px; color: var(--text2); }
+.form-group { margin-bottom: 1.25rem; }
+.form-label { font-size: 13px; font-weight: 500; color: var(--text2); margin-bottom: 0.5rem; display: block; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.9rem;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.upload-btn {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.upload-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 20px var(--accent-glow); }
+.upload-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+/* ─── Dashboard ───────────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  transition: all var(--transition);
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.stat-card-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.stat-card-num { font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; margin-bottom: 0.2rem; }
+.stat-card-label { font-size: 12.5px; color: var(--text2); }
+.uploads-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.uploads-table th {
+  text-align: left;
+  padding: 0.6rem 0.9rem;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text3);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.uploads-table td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text2);
+}
+.uploads-table tr:last-child td { border-bottom: none; }
+.uploads-table tr:hover td { background: var(--surface2); }
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.status-badge {
+  font-size: 11px; font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 99px;
+}
+.status-approved { background: var(--green-bg); color: var(--green); }
+.status-pending { background: var(--amber-bg); color: var(--amber); }
+
+/* ─── Auth Modal ──────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--transition);
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 2rem;
+  width: min(440px, 90vw);
+  transform: translateY(16px) scale(0.97);
+  transition: transform var(--transition);
+}
+.modal-overlay.open .modal { transform: translateY(0) scale(1); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.modal-title { font-size: 1.2rem; font-weight: 800; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface2);
+  color: var(--text2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all var(--transition);
+}
+.modal-close:hover { background: var(--red-bg); color: var(--red); }
+.modal-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+.modal-tab {
+  flex: 1; padding: 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 500;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  background: var(--surface);
+  transition: all var(--transition);
+}
+.modal-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.modal-footer { text-align: center; margin-top: 1rem; font-size: 13px; color: var(--text3); }
+.modal-footer a { color: var(--accent); cursor: pointer; }
+
+/* ─── Toast ───────────────────────────────────────────────────── */
+.toast-container {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  z-index: 9999;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.toast {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1.1rem;
+  font-size: 13.5px;
+  box-shadow: var(--shadow);
+  display: flex; align-items: center; gap: 0.6rem;
+  min-width: 260px;
+  animation: slideInRight 0.3s ease;
+  transition: opacity 0.3s;
+}
+@keyframes slideInRight { from { transform: translateX(60px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.toast.success { border-left: 3px solid var(--green); }
+.toast.error { border-left: 3px solid var(--red); }
+.toast.info { border-left: 3px solid var(--accent); }
+
+/* ─── Loading Skeleton ────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skeleton-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+
+/* ─── Empty State ─────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text3);
+}
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+.empty-title { font-size: 1rem; font-weight: 600; color: var(--text2); margin-bottom: 0.4rem; }
+.empty-desc { font-size: 13.5px; }
+
+/* ─── User Profile Chip ───────────────────────────────────────── */
+.user-chip {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.3rem 0.8rem 0.3rem 0.3rem;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 13px; font-weight: 500;
+}
+.user-chip:hover { background: var(--surface2); }
+
+/* ─── Progress Bar ────────────────────────────────────────────── */
+.progress-bar { height: 4px; background: var(--border2); border-radius: 99px; overflow: hidden; margin: 0.5rem 0; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.6s ease; }
+
+/* ─── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { transform: translateX(-240px); --sidebar-w: 240px; }
+  .sidebar.open { transform: translateX(0); }
+  .main-wrap { margin-left: 0; }
+  .hamburger { display: flex; }
+  .nav-center { display: none; }
+  .hero-stats { gap: 1rem; }
+}
+@media (max-width: 600px) {
+  .main-wrap { padding: 1.25rem; }
+  .form-row { grid-template-columns: 1fr; }
+  .hero { padding: 1.5rem; }
+  .notes-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: 1.6rem; }
+}
+.overlay-bg {
+  position: fixed; inset: 0; z-index: 99;
+  background: rgba(0,0,0,0.4);
+  display: none;
+}
+.overlay-bg.open { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─── -->
+<nav class="navbar" id="navbar">
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <button class="hamburger" id="hamburger" aria-label="Toggle sidebar">☰</button>
+    <div class="nav-logo">
+      <div class="logo-icon">🐝</div>
+      Study<span>Hive</span>
+    </div>
+  </div>
+  <div class="nav-center">
+    <span class="search-icon">🔍</span>
+    <input class="nav-search" type="text" id="globalSearch" placeholder="Search notes, subjects, topics…" autocomplete="off" />
+  </div>
+  <div class="nav-actions" id="navActions">
+    <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+    <button class="btn btn-ghost" id="loginBtn">Sign In</button>
+    <button class="btn btn-accent" id="signupBtn">Sign Up</button>
+  </div>
+</nav>
+
+<!-- Sidebar Overlay (mobile) -->
+<div class="overlay-bg" id="sidebarOverlay"></div>
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar" id="sidebar">
+  <p class="sidebar-section-label">Navigation</p>
+  <ul>
+    <li class="nav-item active" data-page="home">
+      <span class="icon">🏠</span> Home
+    </li>
+    <li class="nav-item" data-page="notes">
+      <span class="icon">📄</span> All Notes
+      <span class="nav-badge" id="notesBadge">42</span>
+    </li>
+    <li class="nav-item" data-page="upload">
+      <span class="icon">⬆️</span> Upload Notes
+    </li>
+    <li class="nav-item" data-page="dashboard">
+      <span class="icon">📊</span> My Dashboard
+    </li>
+  </ul>
+  <p class="sidebar-section-label">Subjects</p>
+  <ul id="sidebarSubjects">
+    <li class="nav-item" data-subject="Computer Science"><span class="icon">💻</span> Computer Science</li>
+    <li class="nav-item" data-subject="Mathematics"><span class="icon">📐</span> Mathematics</li>
+    <li class="nav-item" data-subject="Physics"><span class="icon">⚛️</span> Physics</li>
+    <li class="nav-item" data-subject="Chemistry"><span class="icon">🧪</span> Chemistry</li>
+    <li class="nav-item" data-subject="Biology"><span class="icon">🧬</span> Biology</li>
+    <li class="nav-item" data-subject="Economics"><span class="icon">📈</span> Economics</li>
+  </ul>
+  <div class="sidebar-footer" id="sidebarFooter">
+    <div style="display:flex;align-items:center;gap:0.6rem;padding:0.4rem 0;">
+      <div class="user-avatar-mini" id="sidebarAvatar">?</div>
+      <div>
+        <div style="font-size:13px;font-weight:500;" id="sidebarUsername">Not signed in</div>
+        <div style="font-size:11px;color:var(--text3);" id="sidebarEmail">Sign in to upload</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ─── MAIN CONTENT ─── -->
+<main class="main-wrap">
+
+  <!-- HOME PAGE -->
+  <section class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-tag">✨ 100% Free &amp; Open</div>
+      <h1>Your <em>Ultimate</em> Study<br/>Resource Hub</h1>
+      <p>Access thousands of student-contributed notes, past papers, and study material — all organized, searchable, and free.</p>
+      <div class="hero-actions">
+        <button class="btn btn-accent" onclick="navigateTo('notes')">📄 Browse Notes</button>
+        <button class="btn btn-ghost" onclick="navigateTo('upload')">⬆️ Share Notes</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-num">2,840+</div><div class="stat-label">Study Notes</div></div>
+        <div class="stat"><div class="stat-num">1,200+</div><div class="stat-label">Students</div></div>
+        <div class="stat"><div class="stat-num">6</div><div class="stat-label">Subjects</div></div>
+        <div class="stat"><div class="stat-num">8</div><div class="stat-label">Semesters</div></div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title">Browse by Subject</h2>
+    </div>
+    <div class="category-grid">
+      <div class="cat-card" onclick="filterBySubject('Computer Science')">
+        <div class="cat-icon">💻</div>
+        <div class="cat-name">Computer Science</div>
+        <div class="cat-count">12 notes</div>
+      </div>
+      <div class="cat-card" onclick="filterBySubject('Mathematics')">
+        <div class="cat-icon">📐</div>
+        <div class="cat-name">Mathematics</div>
+        <div class="cat-count">9 notes</div>
+      </div>
+      <div class="cat-card" onclick="filterBySubject('Physics')">
+        <div class="cat-icon">⚛️</div>
+        <div class="cat-name">Physics</div>
+        <div class="cat-count">7 notes</div>
+      </div>
+      <div class="cat-card" onclick="filterBySubject('Chemistry')">
+        <div class="cat-icon">🧪</div>
+        <div class="cat-name">Chemistry</div>
+        <div class="cat-count">6 notes</div>
+      </div>
+      <div class="cat-card" onclick="filterBySubject('Biology')">
+        <div class="cat-icon">🧬</div>
+        <div class="cat-name">Biology</div>
+        <div class="cat-count">5 notes</div>
+      </div>
+      <div class="cat-card" onclick="filterBySubject('Economics')">
+        <div class="cat-icon">📈</div>
+        <div class="cat-name">Economics</div>
+        <div class="cat-count">3 notes</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2 class="section-title">🔥 Trending Notes</h2>
+      <span class="view-all" onclick="navigateTo('notes')">View all →</span>
+    </div>
+    <div class="notes-grid" id="trendingNotes"></div>
+  </section>
+
+  <!-- NOTES PAGE -->
+  <section class="page" id="page-notes">
+    <div class="section-header" style="margin-bottom:1rem;">
+      <h2 class="section-title">📄 All Notes</h2>
+      <button class="btn btn-accent" onclick="requireLogin(openUpload)">+ Upload</button>
+    </div>
+    <div class="filters-row">
+      <select class="filter-select" id="subjectFilter">
+        <option value="">All Subjects</option>
+        <option>Computer Science</option>
+        <option>Mathematics</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Biology</option>
+        <option>Economics</option>
+      </select>
+      <select class="filter-select" id="semesterFilter">
+        <option value="">All Semesters</option>
+        <option>Semester 1</option>
+        <option>Semester 2</option>
+        <option>Semester 3</option>
+        <option>Semester 4</option>
+        <option>Semester 5</option>
+        <option>Semester 6</option>
+        <option>Semester 7</option>
+        <option>Semester 8</option>
+      </select>
+      <button class="filter-btn active" data-sort="recent" onclick="setSort(this,'recent')">Most Recent</button>
+      <button class="filter-btn" data-sort="liked" onclick="setSort(this,'liked')">Most Liked</button>
+      <button class="filter-btn" data-sort="rated" onclick="setSort(this,'rated')">Top Rated</button>
+    </div>
+    <div class="notes-grid" id="allNotesGrid"></div>
+    <div class="empty-state" id="noNotesMsg" style="display:none;">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">No notes found</div>
+      <div class="empty-desc">Try adjusting your filters or search query.</div>
+    </div>
+  </section>
+
+  <!-- UPLOAD PAGE -->
+  <section class="page" id="page-upload">
+    <div class="section-header" style="margin-bottom:1.5rem;">
+      <h2 class="section-title">⬆️ Share Your Notes</h2>
+    </div>
+    <div id="uploadGate" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">🔐</div>
+        <div class="empty-title">Please sign in to upload notes</div>
+        <div class="empty-desc" style="margin-bottom:1.25rem;">Create a free account to share your notes with other students.</div>
+        <button class="btn btn-accent" onclick="openModal('login')">Sign In Now</button>
+      </div>
+    </div>
+    <div id="uploadForm">
+      <div class="upload-card">
+        <div class="upload-box" id="dropZone">
+          <div class="upload-icon">📁</div>
+          <h3>Drop your PDF here</h3>
+          <p>or <span style="color:var(--accent);cursor:pointer;" onclick="document.getElementById('fileInput').click()">browse files</span></p>
+          <p style="font-size:12px;color:var(--text3);margin-top:0.5rem;">PDF files up to 25MB</p>
+          <input type="file" id="fileInput" accept=".pdf" style="display:none;" onchange="handleFileSelect(event)" />
+        </div>
+        <div id="filePreview" style="display:none;margin-bottom:1.25rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:var(--green-bg);border:1px solid rgba(47,216,160,0.2);border-radius:var(--radius-sm);">
+            <span>📄</span>
+            <div style="flex:1;">
+              <div id="fileName" style="font-size:13.5px;font-weight:500;"></div>
+              <div id="fileSize" style="font-size:12px;color:var(--text3);"></div>
+            </div>
+            <button onclick="clearFile()" style="color:var(--red);font-size:16px;">✕</button>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="uploadProgress" style="width:0%"></div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Note Title *</label>
+            <input class="form-input" type="text" id="noteTitle" placeholder="e.g. Data Structures Lecture 5" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject *</label>
+            <select class="form-select" id="noteSubject">
+              <option value="">Select subject</option>
+              <option>Computer Science</option>
+              <option>Mathematics</option>
+              <option>Physics</option>
+              <option>Chemistry</option>
+              <option>Biology</option>
+              <option>Economics</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Semester</label>
+            <select class="form-select" id="noteSemester">
+              <option value="">Select semester</option>
+              <option>Semester 1</option><option>Semester 2</option>
+              <option>Semester 3</option><option>Semester 4</option>
+              <option>Semester 5</option><option>Semester 6</option>
+              <option>Semester 7</option><option>Semester 8</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Topic / Tags</label>
+            <input class="form-input" type="text" id="noteTags" placeholder="e.g. Arrays, Trees, Sorting" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="noteDesc" placeholder="What topics does this cover? Any tips for students?"></textarea>
+        </div>
+        <button class="upload-btn" onclick="submitUpload()">⬆️ Upload Note</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD PAGE -->
+  <section class="page" id="page-dashboard">
+    <div id="dashGate" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <div class="empty-title">Sign in to view your dashboard</div>
+        <div class="empty-desc" style="margin-bottom:1.25rem;">Track your uploads, likes, and impact on StudyHive.</div>
+        <button class="btn btn-accent" onclick="openModal('login')">Sign In</button>
+      </div>
+    </div>
+    <div id="dashContent">
+      <h2 class="section-title" style="margin-bottom:1.5rem;">📊 My Dashboard</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-icon">📄</div>
+          <div class="stat-card-num" id="dUploads">0</div>
+          <div class="stat-card-label">Notes Uploaded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">❤️</div>
+          <div class="stat-card-num" id="dLikes">0</div>
+          <div class="stat-card-label">Total Likes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">⬇️</div>
+          <div class="stat-card-num" id="dDownloads">0</div>
+          <div class="stat-card-label">Downloads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">⭐</div>
+          <div class="stat-card-num" id="dRating">—</div>
+          <div class="stat-card-label">Avg. Rating</div>
+        </div>
+      </div>
+      <div class="section-header">
+        <h3 class="section-title" style="font-size:1rem;">My Uploads</h3>
+      </div>
+      <div class="table-wrap">
+        <table class="uploads-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Subject</th>
+              <th>Date</th>
+              <th>Likes</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="dashTable">
+            <tr><td colspan="6" style="text-align:center;color:var(--text3);padding:2rem;">No uploads yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─── AUTH MODAL ─── -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Welcome back 👋</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="modal-tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="loginEmail" placeholder="you@university.edu" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="loginPass" placeholder="••••••••" />
+      </div>
+      <button class="upload-btn" onclick="doLogin()" style="margin-top:0.25rem;">Sign In</button>
+    </div>
+    <div id="signupFormEl" style="display:none;">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" id="signupName" placeholder="Riya Sharma" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="signupEmail" placeholder="you@university.edu" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="signupPass" placeholder="Min 6 characters" />
+      </div>
+      <button class="upload-btn" onclick="doSignup()" style="margin-top:0.25rem;">Create Account</button>
+    </div>
+    <div class="modal-footer">
+      Protected by StudyHive. Your data is safe.
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST CONTAINER ─── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ─────────────────────────────────────────────
+   DATA STORE
+───────────────────────────────────────────── */
+let currentUser = JSON.parse(localStorage.getItem('sh_user') || 'null');
+let likedNotes = JSON.parse(localStorage.getItem('sh_likes') || '[]');
+let ratedNotes = JSON.parse(localStorage.getItem('sh_ratings') || '{}');
+let currentSort = 'recent';
+let currentSubjectFilter = '';
+let selectedFile = null;
+
+const SAMPLE_NOTES = [
+  { id:1, title:'Data Structures & Algorithms - Complete Notes', subject:'Computer Science', semester:'Semester 3', desc:'Covers Arrays, Linked Lists, Trees, Graphs, Sorting & Searching algorithms with solved examples.', uploader:'Arjun Mehta', initials:'AM', date:'2025-04-01', likes:87, rating:4.8, downloads:312, size:'3.2 MB', trending:true },
+  { id:2, title:'Calculus II — Integrals & Series', subject:'Mathematics', semester:'Semester 2', desc:'Definite/indefinite integrals, series convergence, Taylor and Maclaurin series. Includes formula sheet.', uploader:'Priya Nair', initials:'PN', date:'2025-03-28', likes:54, rating:4.5, downloads:189, size:'2.1 MB', trending:true },
+  { id:3, title:'Quantum Mechanics Basics', subject:'Physics', semester:'Semester 4', desc:'Wave functions, Schrödinger equation, uncertainty principle and energy quantization explained clearly.', uploader:'Rohan Das', initials:'RD', date:'2025-03-22', likes:71, rating:4.7, downloads:247, size:'4.0 MB', trending:true },
+  { id:4, title:'Organic Chemistry — Reaction Mechanisms', subject:'Chemistry', semester:'Semester 3', desc:'SN1/SN2, elimination reactions, addition and aromatic substitution with diagrams and mnemonics.', uploader:'Sneha Gupta', initials:'SG', date:'2025-03-18', likes:43, rating:4.3, downloads:161, size:'2.8 MB', trending:false },
+  { id:5, title:'Operating Systems — Process Scheduling', subject:'Computer Science', semester:'Semester 5', desc:'FCFS, SJF, Round Robin, Priority scheduling with Gantt chart examples and numerical practice.', uploader:'Karan Patel', initials:'KP', date:'2025-03-15', likes:66, rating:4.6, downloads:224, size:'1.9 MB', trending:false },
+  { id:6, title:'Microeconomics — Supply & Demand', subject:'Economics', semester:'Semester 1', desc:'Elasticity, consumer theory, producer theory, market equilibrium and game theory introduction.', uploader:'Aisha Bhat', initials:'AB', date:'2025-03-10', likes:38, rating:4.2, downloads:133, size:'1.5 MB', trending:false },
+  { id:7, title:'Cell Biology — Mitosis & Meiosis', subject:'Biology', semester:'Semester 2', desc:'Detailed phase-by-phase breakdown of cell division with labeled diagrams and comparison charts.', uploader:'Rahul Verma', initials:'RV', date:'2025-03-08', likes:29, rating:4.1, downloads:98, size:'3.4 MB', trending:false },
+  { id:8, title:'Linear Algebra — Matrices & Eigenvalues', subject:'Mathematics', semester:'Semester 3', desc:'Matrix operations, determinants, vector spaces, eigenvalues/eigenvectors with applications.', uploader:'Meera Joshi', initials:'MJ', date:'2025-03-05', likes:49, rating:4.4, downloads:172, size:'2.3 MB', trending:false },
+  { id:9, title:'Database Management Systems — SQL', subject:'Computer Science', semester:'Semester 4', desc:'Relational model, SQL queries, normalization, transactions and ACID properties.', uploader:'Dev Shah', initials:'DS', date:'2025-02-28', likes:92, rating:4.9, downloads:384, size:'2.6 MB', trending:false },
+  { id:10, title:'Thermodynamics — Laws & Applications', subject:'Physics', semester:'Semester 3', desc:'All four laws with derivations, Carnot cycle, entropy, heat engines and refrigerators.', uploader:'Nisha Pillai', initials:'NP', date:'2025-02-20', likes:35, rating:4.0, downloads:116, size:'2.0 MB', trending:false },
+];
+
+let notes = [...SAMPLE_NOTES, ...JSON.parse(localStorage.getItem('sh_notes') || '[]')];
+
+/* ─────────────────────────────────────────────
+   THEME
+───────────────────────────────────────────── */
+const themeToggle = document.getElementById('themeToggle');
+let isDark = localStorage.getItem('sh_theme') !== 'light';
+applyTheme();
+themeToggle.addEventListener('click', () => { isDark = !isDark; applyTheme(); localStorage.setItem('sh_theme','dark'); });
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  themeToggle.textContent = isDark ? '🌙' : '☀️';
+  if (!isDark) localStorage.setItem('sh_theme','light'); else localStorage.setItem('sh_theme','dark');
+}
+
+/* ─────────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────────── */
+function navigateTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item[data-page]').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelector('.nav-item[data-page="' + page + '"]')?.classList.add('active');
+  closeSidebar();
+  if (page === 'notes') renderAllNotes();
+  if (page === 'upload') checkUploadAccess();
+  if (page === 'dashboard') checkDashAccess();
+}
+
+document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+  item.addEventListener('click', () => navigateTo(item.dataset.page));
+});
+document.querySelectorAll('.nav-item[data-subject]').forEach(item => {
+  item.addEventListener('click', () => filterBySubject(item.dataset.subject));
+});
+
+function filterBySubject(sub) {
+  currentSubjectFilter = sub;
+  document.getElementById('subjectFilter').value = sub;
+  navigateTo('notes');
+}
+
+/* ─────────────────────────────────────────────
+   SIDEBAR MOBILE
+───────────────────────────────────────────── */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+document.getElementById('hamburger').addEventListener('click', toggleSidebar);
+overlay.addEventListener('click', closeSidebar);
+function toggleSidebar() { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); }
+function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+
+/* ─────────────────────────────────────────────
+   BADGE COLORS
+───────────────────────────────────────────── */
+const badgeClass = { 'Computer Science':'badge-cs','Mathematics':'badge-math','Physics':'badge-phy','Chemistry':'badge-chem','Biology':'badge-bio','Economics':'badge-econ' };
+
+/* ─────────────────────────────────────────────
+   NOTE CARD RENDERER
+───────────────────────────────────────────── */
+function createNoteCard(note) {
+  const liked = likedNotes.includes(note.id);
+  const userRating = ratedNotes[note.id] || 0;
+  const stars = [1,2,3,4,5].map(i =>
+    `<span class="star ${i<=Math.round(note.rating)?'filled':''}" data-note="${note.id}" data-star="${i}" onclick="rateNote(${note.id},${i})">★</span>`
+  ).join('');
+  const card = document.createElement('div');
+  card.className = 'note-card';
+  card.style.animationDelay = '0ms';
+  card.innerHTML = `
+    <div class="note-card-top">
+      <span class="subject-badge ${badgeClass[note.subject]||'badge-cs'}">${note.subject}</span>
+      <button class="note-menu-btn" title="Options">⋯</button>
+    </div>
+    <div class="note-card-body">
+      <div class="note-title">${note.title}</div>
+      <div class="note-desc">${note.desc}</div>
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.65rem;">
+        <div class="stars">${stars}</div>
+        <span style="font-size:12px;color:var(--text3);">${note.rating.toFixed(1)} · ${note.semester}</span>
+      </div>
+    </div>
+    <div class="note-card-meta">
+      <div class="meta-avatar">${note.initials}</div>
+      <div class="meta-info">
+        <div class="meta-name">${note.uploader}</div>
+        <div class="meta-date">${formatDate(note.date)}</div>
+      </div>
+      <div class="note-actions">
+        <button class="like-btn ${liked?'liked':''}" id="like-${note.id}" onclick="toggleLike(${note.id},this)">
+          ${liked?'❤️':'🤍'} <span id="likeCount-${note.id}">${note.likes}</span>
+        </button>
+        <button class="dl-btn" onclick="downloadNote(${note.id})">⬇️ <span class="file-size">${note.size}</span></button>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function formatDate(d) {
+  const date = new Date(d);
+  return date.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+
+/* ─────────────────────────────────────────────
+   RENDER FUNCTIONS
+───────────────────────────────────────────── */
+function renderTrending() {
+  const container = document.getElementById('trendingNotes');
+  container.innerHTML = '';
+  const trending = notes.filter(n => n.trending).slice(0, 3);
+  trending.forEach((n,i) => {
+    const card = createNoteCard(n);
+    card.style.animationDelay = `${i*80}ms`;
+    container.appendChild(card);
+  });
+}
+
+function renderAllNotes() {
+  const container = document.getElementById('allNotesGrid');
+  const noMsg = document.getElementById('noNotesMsg');
+  const search = document.getElementById('globalSearch').value.toLowerCase();
+  const subj = document.getElementById('subjectFilter').value;
+  const sem = document.getElementById('semesterFilter').value;
+
+  let filtered = notes.filter(n => {
+    const matchSearch = !search || n.title.toLowerCase().includes(search) || n.subject.toLowerCase().includes(search) || n.desc.toLowerCase().includes(search);
+    const matchSubj = !subj || n.subject === subj;
+    const matchSem = !sem || n.semester === sem;
+    return matchSearch && matchSubj && matchSem;
+  });
+
+  if (currentSort === 'liked') filtered.sort((a,b) => b.likes - a.likes);
+  else if (currentSort === 'rated') filtered.sort((a,b) => b.rating - a.rating);
+  else filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  container.innerHTML = '';
+  if (!filtered.length) { noMsg.style.display='block'; return; }
+  noMsg.style.display='none';
+  filtered.forEach((n,i) => {
+    const card = createNoteCard(n);
+    card.style.animationDelay = `${i*50}ms`;
+    container.appendChild(card);
+  });
+  document.getElementById('notesBadge').textContent = filtered.length;
+}
+
+/* ─────────────────────────────────────────────
+   SEARCH
+───────────────────────────────────────────── */
+document.getElementById('globalSearch').addEventListener('input', () => {
+  if (document.getElementById('page-notes').classList.contains('active')) renderAllNotes();
+});
+document.getElementById('subjectFilter').addEventListener('change', renderAllNotes);
+document.getElementById('semesterFilter').addEventListener('change', renderAllNotes);
+
+function setSort(btn, type) {
+  currentSort = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAllNotes();
+}
+
+/* ─────────────────────────────────────────────
+   LIKE & RATE
+───────────────────────────────────────────── */
+function toggleLike(id, btn) {
+  if (!currentUser) { showToast('Sign in to like notes!','info'); openModal('login'); return; }
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  const idx = likedNotes.indexOf(id);
+  if (idx === -1) {
+    likedNotes.push(id);
+    note.likes++;
+    btn.classList.add('liked');
+    btn.querySelector('span:first-child') && (btn.innerHTML = `❤️ <span id="likeCount-${id}">${note.likes}</span>`);
+    showToast('Note liked! ❤️','success');
+  } else {
+    likedNotes.splice(idx,1);
+    note.likes--;
+    btn.classList.remove('liked');
+    btn.innerHTML = `🤍 <span id="likeCount-${id}">${note.likes}</span>`;
+    showToast('Like removed','info');
+  }
+  localStorage.setItem('sh_likes', JSON.stringify(likedNotes));
+  updateDashboard();
+}
+
+function rateNote(id, star) {
+  if (!currentUser) { showToast('Sign in to rate notes!','info'); openModal('login'); return; }
+  ratedNotes[id] = star;
+  localStorage.setItem('sh_ratings', JSON.stringify(ratedNotes));
+  const note = notes.find(n => n.id === id);
+  if (note) note.rating = Math.min(5, (note.rating * 0.8 + star * 0.2));
+  showToast(`Rated ${star} star${star>1?'s':''}! ⭐`,'success');
+  if (document.getElementById('page-notes').classList.contains('active')) renderAllNotes();
+}
+
+function downloadNote(id) {
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  note.downloads = (note.downloads || 0) + 1;
+  showToast(`Downloading "${note.title}"… ⬇️`,'success');
+  // In production: window.open(note.fileUrl)
+}
+
+/* ─────────────────────────────────────────────
+   UPLOAD
+───────────────────────────────────────────── */
+function checkUploadAccess() {
+  if (!currentUser) {
+    document.getElementById('uploadGate').style.display='block';
+    document.getElementById('uploadForm').style.display='none';
+  } else {
+    document.getElementById('uploadGate').style.display='none';
+    document.getElementById('uploadForm').style.display='block';
+  }
+}
+
+function openUpload() { navigateTo('upload'); }
+function requireLogin(cb) { if (!currentUser) { openModal('login'); return; } cb(); }
+
+// Drag & Drop
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type === 'application/pdf') setFile(f);
+  else showToast('Please upload a PDF file only.','error');
+});
+
+function handleFileSelect(e) { const f = e.target.files[0]; if (f) setFile(f); }
+function setFile(f) {
+  selectedFile = f;
+  document.getElementById('fileName').textContent = f.name;
+  document.getElementById('fileSize').textContent = (f.size/1024/1024).toFixed(2) + ' MB';
+  document.getElementById('filePreview').style.display='block';
+  document.getElementById('dropZone').style.display='none';
+  // Simulate upload progress
+  let prog = 0;
+  const bar = document.getElementById('uploadProgress');
+  const iv = setInterval(() => { prog = Math.min(prog + Math.random()*20, 85); bar.style.width = prog + '%'; if (prog >= 85) clearInterval(iv); }, 200);
+}
+function clearFile() {
+  selectedFile = null;
+  document.getElementById('filePreview').style.display='none';
+  document.getElementById('dropZone').style.display='block';
+  document.getElementById('fileInput').value='';
+  document.getElementById('uploadProgress').style.width='0%';
+}
+
+function submitUpload() {
+  const title = document.getElementById('noteTitle').value.trim();
+  const subject = document.getElementById('noteSubject').value;
+  const semester = document.getElementById('noteSemester').value;
+  const desc = document.getElementById('noteDesc').value.trim();
+  if (!title || !subject) { showToast('Please fill in title and subject!','error'); return; }
+  // Animate progress to 100%
+  document.getElementById('uploadProgress').style.width = '100%';
+  const newNote = {
+    id: Date.now(),
+    title, subject, semester: semester || 'Semester 1', desc: desc || 'No description provided.',
+    uploader: currentUser.name, initials: currentUser.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2),
+    date: new Date().toISOString().split('T')[0],
+    likes: 0, rating: 0, downloads: 0, size: selectedFile ? (selectedFile.size/1024/1024).toFixed(1)+' MB' : '0 MB',
+    trending: false
+  };
+  notes.unshift(newNote);
+  // Persist user-uploaded notes
+  const userNotes = JSON.parse(localStorage.getItem('sh_notes') || '[]');
+  userNotes.unshift(newNote);
+  localStorage.setItem('sh_notes', JSON.stringify(userNotes));
+  showToast('Notes uploaded successfully! 🎉','success');
+  // Reset form
+  ['noteTitle','noteDesc','noteTags'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('noteSubject').value='';
+  document.getElementById('noteSemester').value='';
+  clearFile();
+  updateDashboard();
+  setTimeout(() => navigateTo('notes'), 1000);
+}
+
+/* ─────────────────────────────────────────────
+   DASHBOARD
+───────────────────────────────────────────── */
+function checkDashAccess() {
+  if (!currentUser) {
+    document.getElementById('dashGate').style.display='block';
+    document.getElementById('dashContent').style.display='none';
+  } else {
+    document.getElementById('dashGate').style.display='none';
+    document.getElementById('dashContent').style.display='block';
+    updateDashboard();
+  }
+}
+
+function updateDashboard() {
+  if (!currentUser) return;
+  const myNotes = notes.filter(n => n.uploader === currentUser.name);
+  const totalLikes = myNotes.reduce((s,n) => s + n.likes, 0);
+  const totalDl = myNotes.reduce((s,n) => s + (n.downloads||0), 0);
+  const avgRating = myNotes.length ? (myNotes.reduce((s,n)=>s+n.rating,0)/myNotes.length).toFixed(1) : '—';
+  document.getElementById('dUploads').textContent = myNotes.length;
+  document.getElementById('dLikes').textContent = totalLikes;
+  document.getElementById('dDownloads').textContent = totalDl;
+  document.getElementById('dRating').textContent = avgRating !== '—' ? avgRating + '★' : '—';
+  const tbody = document.getElementById('dashTable');
+  if (!myNotes.length) {
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:2rem;">No uploads yet. <a onclick="navigateTo(\'upload\')" style="color:var(--accent);cursor:pointer;">Upload your first note →</a></td></tr>';
+    return;
+  }
+  tbody.innerHTML = myNotes.map(n => `
+    <tr>
+      <td style="font-weight:500;color:var(--text);">${n.title}</td>
+      <td><span class="subject-badge ${badgeClass[n.subject]||'badge-cs'}">${n.subject}</span></td>
+      <td>${formatDate(n.date)}</td>
+      <td>❤️ ${n.likes}</td>
+      <td><span class="status-badge ${n.id > 1000000 ? 'status-pending':'status-approved'}">${n.id > 1000000 ? 'Pending':'Approved'}</span></td>
+      <td><button onclick="deleteNote(${n.id})" style="color:var(--red);font-size:12px;padding:0.2rem 0.5rem;border:1px solid var(--red-bg);border-radius:var(--radius-sm);background:var(--red-bg);cursor:pointer;">Delete</button></td>
+    </tr>
+  `).join('');
+}
+
+function deleteNote(id) {
+  if (!confirm('Delete this note?')) return;
+  notes = notes.filter(n => n.id !== id);
+  const userNotes = JSON.parse(localStorage.getItem('sh_notes') || '[]').filter(n => n.id !== id);
+  localStorage.setItem('sh_notes', JSON.stringify(userNotes));
+  showToast('Note deleted.','info');
+  updateDashboard();
+  renderAllNotes();
+}
+
+/* ─────────────────────────────────────────────
+   AUTH
+───────────────────────────────────────────── */
+function openModal(tab='login') {
+  document.getElementById('authModal').classList.add('open');
+  switchTab(tab);
+}
+function closeModal() { document.getElementById('authModal').classList.remove('open'); }
+document.getElementById('authModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+document.getElementById('loginBtn').addEventListener('click', () => openModal('login'));
+document.getElementById('signupBtn').addEventListener('click', () => openModal('signup'));
+
+function switchTab(tab) {
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabSignup').classList.toggle('active', tab==='signup');
+  document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
+  document.getElementById('signupFormEl').style.display = tab==='signup'?'block':'none';
+  document.getElementById('modalTitle').textContent = tab==='login' ? 'Welcome back 👋' : 'Join StudyHive 🐝';
+}
+
+function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) { showToast('Please fill in all fields.','error'); return; }
+  // Check stored users
+  const users = JSON.parse(localStorage.getItem('sh_users') || '[]');
+  const user = users.find(u => u.email === email && u.pass === pass);
+  if (!user && !(email && pass.length >= 6)) { showToast('Invalid credentials.','error'); return; }
+  const loggedIn = user || { name: email.split('@')[0], email, pass };
+  currentUser = loggedIn;
+  localStorage.setItem('sh_user', JSON.stringify(currentUser));
+  updateNavUser();
+  closeModal();
+  showToast(`Welcome back, ${currentUser.name.split(' ')[0]}! 👋`,'success');
+}
+
+function doSignup() {
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const pass = document.getElementById('signupPass').value;
+  if (!name || !email || !pass) { showToast('Please fill all fields.','error'); return; }
+  if (pass.length < 6) { showToast('Password must be 6+ characters.','error'); return; }
+  const users = JSON.parse(localStorage.getItem('sh_users') || '[]');
+  if (users.find(u => u.email === email)) { showToast('Email already registered.','error'); return; }
+  const newUser = { name, email, pass };
+  users.push(newUser);
+  localStorage.setItem('sh_users', JSON.stringify(users));
+  currentUser = newUser;
+  localStorage.setItem('sh_user', JSON.stringify(currentUser));
+  updateNavUser();
+  closeModal();
+  showToast(`Account created! Welcome, ${name.split(' ')[0]}! 🎉`,'success');
+}
+
+function doLogout() {
+  currentUser = null;
+  localStorage.removeItem('sh_user');
+  updateNavUser();
+  navigateTo('home');
+  showToast('Signed out successfully.','info');
+}
+
+function updateNavUser() {
+  const navActions = document.getElementById('navActions');
+  if (currentUser) {
+    const initials = currentUser.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    navActions.innerHTML = `
+      <button class="theme-toggle" id="themeToggle2" title="Toggle theme">${isDark?'🌙':'☀️'}</button>
+      <div class="user-chip" onclick="navigateTo('dashboard')">
+        <div class="user-avatar-mini">${initials}</div>
+        ${currentUser.name.split(' ')[0]}
+      </div>
+      <button class="btn btn-ghost" onclick="doLogout()">Sign Out</button>
+    `;
+    document.getElementById('themeToggle2')?.addEventListener('click', () => { isDark=!isDark; applyTheme(); });
+    document.getElementById('sidebarAvatar').textContent = initials;
+    document.getElementById('sidebarUsername').textContent = currentUser.name;
+    document.getElementById('sidebarEmail').textContent = currentUser.email;
+  } else {
+    navActions.innerHTML = `
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">${isDark?'🌙':'☀️'}</button>
+      <button class="btn btn-ghost" id="loginBtn">Sign In</button>
+      <button class="btn btn-accent" id="signupBtn">Sign Up</button>
+    `;
+    document.getElementById('themeToggle')?.addEventListener('click', () => { isDark=!isDark; applyTheme(); });
+    document.getElementById('loginBtn')?.addEventListener('click', () => openModal('login'));
+    document.getElementById('signupBtn')?.addEventListener('click', () => openModal('signup'));
+    document.getElementById('sidebarAvatar').textContent = '?';
+    document.getElementById('sidebarUsername').textContent = 'Not signed in';
+    document.getElementById('sidebarEmail').textContent = 'Sign in to upload';
+  }
+}
+
+/* ─────────────────────────────────────────────
+   TOAST
+───────────────────────────────────────────── */
+function showToast(msg, type='info') {
+  const tc = document.getElementById('toastContainer');
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(), 300); }, 3200);
+}
+
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+updateNavUser();
+renderTrending();
+renderAllNotes();
+</script>
+</body>
+</html>
